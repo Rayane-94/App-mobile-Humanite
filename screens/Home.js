@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { Button, StyleSheet, Text, View, Alert } from 'react-native';
 
 
 const Home = () => {
@@ -7,29 +7,36 @@ const Home = () => {
     <View style={styles.container}> 
       <Text style={styles.title}> {'Ramasse'.toUpperCase()} </Text>
       <Text style={styles.subtitle}> {'Blue Project'.toUpperCase()} </Text>
+      <Button title='DEPART' onPress={()=> Alert.alert('Boutton apuiyer')} />
       <StatusBar style="auto" />
     </View>
   );
 } 
 
+
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    //flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
     
   },
-  title:{
-    
-    //flex: 1,//
+
+  title: {
+  bottom:200,
+  //backgroundColor : '#FFFF',
   color: '#80dc54',
   fontSize: 80,
   },
-  subtitle:{
+
+  subtitle: {
     //flex; 2,//
+    bottom:180,
+    bagroundColor : '#FFFF',
     color: '#629AE5',
     fontSize: 40,
   }
+  
 });
 
 export default Home;
