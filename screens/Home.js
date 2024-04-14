@@ -7,7 +7,7 @@ const Home = () => {
     <View style={styles.container}> 
       <Text style={styles.title}> {'Ramasse'.toUpperCase()} </Text>
       <Text style={styles.subtitle}> {'Blue Project'.toUpperCase()} </Text>
-      <Button title='DEPART' onPress={()=> Alert.alert('Boutton apuiyer')} />
+      <Button style={styles.bouton} title='DEPART' onPress={()=> Alert.alert('Bouton apuiyer')} color='#7ed957' />
       <StatusBar style="auto" />
     </View>
   );
@@ -31,11 +31,19 @@ const styles = StyleSheet.create({
 
   subtitle: {
     //flex; 2,//
-    bottom:180,
-    bagroundColor : '#FFFF',
+    bottom: 180,
+    //backgroundColor : '#FFFF',
     color: '#629AE5',
     fontSize: 40,
-  }
+  },
+  bouton: {
+    backgroundColor: '#ZERF',
+    top: 100,
+    borderRadius:0,
+    
+    //PROPRIETER DU BOUTON NE SONT PAS ENCORE LIER UNNIQUEMENT CEUX DE LA COULEUR APRES LA DECLARATION DANS LE MAIN
+    
+  },
   
 });
 
