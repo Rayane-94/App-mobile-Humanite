@@ -1,5 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
-import { Button, StyleSheet, Text, View, Alert } from 'react-native';
+import { Button, StyleSheet, Text, View, Alert} from 'react-native';
+import { Image } from 'react-native';
 
 
 const Home = () => {
@@ -7,6 +8,9 @@ const Home = () => {
     <View style={styles.container}> 
       <Text style={styles.title}> {'Ramasse'.toUpperCase()} </Text>
       <Text style={styles.subtitle}> {'Blue Project'.toUpperCase()} </Text>
+
+      <Image source={require('./assets/camion-humanite.png')} />
+      
       <Button style={styles.bouton} title='DEPART' onPress={()=> Alert.alert('Bouton apuiyer')} color='#7ed957' />
       <StatusBar style="auto" />
     </View>
