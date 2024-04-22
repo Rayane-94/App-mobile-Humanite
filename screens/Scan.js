@@ -3,20 +3,16 @@ import { Button, Text,View, Image , StyleSheet} from 'react-native';
 
 
 
-const Loading = ({navigation}) => {
+const Scan = ({navigation}) => {
     return(
         
         <View style={styles.container}>
       <Text style={styles.title}> {'Ramasse'.toUpperCase()} </Text>
       <Text style={styles.subtitle}> {'Blue Project'.toUpperCase()} </Text>
-      <Text style={styles.subtitle}> {'Fin du chargement +chrono a add'} </Text>
       <Button
         title='Retour'
         onPress={() => navigation.goBack()} color = '#7ed957'/>
-        <Button
-        
-        title='Scannez le contrat'
-        onPress={() => navigation.navigate('Scan')} color = '#7ed957'/>
+       
     </View>
 
     )
@@ -37,4 +33,4 @@ const styles = StyleSheet.create({
       color: '#629AE5',
     },
   });
-export default Loading
+export default Scan

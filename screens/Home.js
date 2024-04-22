@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, Button, StyleSheet } from 'react-native';
+import { View, Text, Button, StyleSheet, Image } from 'react-native';
 
 const Home = ({ navigation }) => {
   return (
@@ -7,6 +7,7 @@ const Home = ({ navigation }) => {
 
       <Text style={styles.title}> {'Ramasse'.toUpperCase()} </Text>
       <Text style={styles.subtitle}> {'Blue Project'.toUpperCase()} </Text>
+     
       <Button
         title='DEPART' onPress={() => navigation.navigate('Start')} color='#7ed957'/>
     </View>

@@ -1,9 +1,10 @@
 import React from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Image } from 'react-native';
 import Home from './screens/Home';
 import Start from './screens/Start';
 import Loading from './screens/Loading';
+import Scan from './screens/Scan';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
@@ -22,11 +23,12 @@ export default function App() {
     <View style={styles.container}>
 
       <NavigationContainer>
-{/*screenOptions={{headerShown: false}} */}
+
         <Stack.Navigator initialRouteName="Home"  > 
             <Stack.Screen name="Home" component={Home} />
             <Stack.Screen name="Start" component={Start} />
             <Stack.Screen name="Loading" component={Loading} />
+            <Stack.Screen name="Scan" component={Scan} />
         </Stack.Navigator>
 
       </NavigationContainer>
