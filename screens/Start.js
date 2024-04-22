@@ -1,14 +1,18 @@
 import React from 'react';
 import { View, Text, Button, StyleSheet } from 'react-native';
 
-const Home = ({ navigation }) => {
+const Start = ({ navigation }) => {
   return (
-    <View style={styles.container}> 
-
+    <View style={styles.container}>
       <Text style={styles.title}> {'Ramasse'.toUpperCase()} </Text>
       <Text style={styles.subtitle}> {'Blue Project'.toUpperCase()} </Text>
+      <Text style={styles.subtitle}> {'Debut du chargement'.toUpperCase()} </Text>
       <Button
-        title='DEPART' onPress={() => navigation.navigate('Start')} color='#7ed957'/>
+        title='Retour '
+        onPress={() => navigation.goBack()} color = '#7ed957'/>
+        <Button
+        title='Fin du chargement'
+        onPress={() => navigation.navigate('Loading')} color = '#7ed957'/>
     </View>
   );
 };
@@ -30,4 +34,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Home;
+export default Start;
