@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, Button, StyleSheet } from 'react-native';
+import { View, Text, Button, StyleSheet, Image } from 'react-native';
 
 const Start = ({ navigation }) => {
   return (
@@ -7,8 +7,14 @@ const Start = ({ navigation }) => {
       <Text style={styles.title}> {'Ramasse'.toUpperCase()} </Text>
       <Text style={styles.subtitle}> {'Blue Project'.toUpperCase()} </Text>
       <Text style={styles.subtitle}> {'Debut du chargement'.toUpperCase()} </Text>
+
+      <Image
+        style={styles.logo}
+        source={require('../assets/camion.png')}
+      />
+
       <Button
-        title='Retour '
+        title='Retour'
         onPress={() => navigation.goBack()} color = '#7ed957'/>
         <Button
         title='Fin du chargement'

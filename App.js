@@ -1,6 +1,6 @@
 import React from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { View, StyleSheet, Image } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import Home from './screens/Home';
 import Start from './screens/Start';
 import Loading from './screens/Loading';
@@ -24,7 +24,7 @@ export default function App() {
 
       <NavigationContainer>
 
-        <Stack.Navigator initialRouteName="Home"  > 
+        <Stack.Navigator initialRouteName="Home" screenOptions={{headerShown: false}} > 
             <Stack.Screen name="Home" component={Home} />
             <Stack.Screen name="Start" component={Start} />
             <Stack.Screen name="Loading" component={Loading} />

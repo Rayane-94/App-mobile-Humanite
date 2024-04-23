@@ -7,7 +7,10 @@ const Home = ({ navigation }) => {
 
       <Text style={styles.title}> {'Ramasse'.toUpperCase()} </Text>
       <Text style={styles.subtitle}> {'Blue Project'.toUpperCase()} </Text>
-     
+      <Image
+        style={styles.logo}
+        source={require('../assets/camion.png')}
+      />
       <Button
         title='DEPART' onPress={() => navigation.navigate('Start')} color='#7ed957'/>
     </View>
@@ -28,6 +31,10 @@ const styles = StyleSheet.create({
   subtitle: {
     fontSize: 40,
     color: '#629AE5',
+  },
+  logo: {
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 

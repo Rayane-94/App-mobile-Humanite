@@ -10,6 +10,12 @@ const Loading = ({navigation}) => {
       <Text style={styles.title}> {'Ramasse'.toUpperCase()} </Text>
       <Text style={styles.subtitle}> {'Blue Project'.toUpperCase()} </Text>
       <Text style={styles.subtitle}> {'Fin du chargement +chrono a add'} </Text>
+
+      <Image
+        style={styles.logo}
+        source={require('../assets/camion.png')}
+      />
+
       <Button
         title='Retour'
         onPress={() => navigation.goBack()} color = '#7ed957'/>
