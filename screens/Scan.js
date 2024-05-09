@@ -20,7 +20,7 @@ export default function Scan() {
 
   const handleTakePhoto = async () => {
     if (cameraRef.current) {
-      const photo = await cameraRef.current.takePictureAsync();
+      const photo = await cameraRef.current.takePictureAsync({ base64 : true });
       // Gérer l'enregistrement de la photo localement ici
       console.log('Photo prise:', photo.uri);
       setPhotoUri(photo.uri);
@@ -85,6 +85,7 @@ export default function Scan() {
         style={styles.camera}
         type={Camera.Constants.Type.back}
       />
+     
       <Button style={styles.boutonRetour}
         title='Prendre une photo'
         onPress={handleTakePhoto} color='#7ed957' />
