@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Button, Text, View, StyleSheet, Image } from 'react-native';
 import { Camera } from 'expo-camera';
 import { useNavigation } from '@react-navigation/native';
+//import { FileSystem } from 'expo-file-system';
 
 export default function Scan() {
   const navigation = useNavigation();
@@ -31,16 +32,27 @@ export default function Scan() {
     setScanned(false);
     setPhotoUri(null); // Réinitialiser l'aperçu de la photo
   };
+  /*const convertB64 = async (uri) => {
+    const base64 = await FileSystem.readAsStringAsync(uri, { encoding: FileSystem.EncodingType.Base64 });
+    console.log(base64);
+    return base64;
+    
+  };*/
   const uploadPhoto = async (uri) => {
+   // const base64 = await convertB64(uri)
     const formData = new FormData();
-    formData.append('uri',uri)
+    formData.append('uri', uri)
     formData.append('photo', {
       uri: uri,
-      type: 'image/jpeg',
+      type: 'image/jpg',
       name: 'photo.jpg',
     });
 
+    formData.append('imageUrl', uri);
+    formData.append('date', new Date().toISOString()); // a parametrer au format J/M/A : H:Min
+    //formData.append('base64Image', base64); 
     try {
+
       const response = await fetch('http://192.168.1.106:3000/api/send-contract', {
         method: 'POST',
         body: formData,
