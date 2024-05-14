@@ -1,102 +1,96 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Button, Text, View, StyleSheet, Image } from 'react-native';
-import { Camera } from 'expo-camera';
-import { useNavigation } from '@react-navigation/native';
-//import { FileSystem } from 'expo-file-system';
+import { CameraView, useCameraPermissions } from 'expo-camera';
+//import { useNavigation } from '@react-navigation/native';
 
 export default function Scan() {
-  const navigation = useNavigation();
-  const [hasPermission, setHasPermission] = useState(null);
-  const [scanned, setScanned] = useState(false);
+  //const navigation = useNavigation();
+  const [permission, requestPermission] = useCameraPermissions();
   const [photoUri, setPhotoUri] = useState(null);
   const cameraRef = useRef(null);
 
   useEffect(() => {
-    (async () => {
-      const { status } = await Camera.requestCameraPermissionsAsync();
-      setHasPermission(status === 'granted');
-    })();
-  }, []);
+    if (permission && permission.granted) {
+      // Vous pouvez effectuer des actions supplémentaires ici après l'obtention de l'autorisation
+    }
+  }, [permission]);
 
   const handleTakePhoto = async () => {
     if (cameraRef.current) {
-      const photo = await cameraRef.current.takePictureAsync({ base64 : true });
-      // Gérer l'enregistrement de la photo localement ici
+      const photo = await cameraRef.current.takePictureAsync({ base64: true });
       console.log('Photo prise:', photo.uri);
       setPhotoUri(photo.uri);
-      uploadPhoto(photo.uri) // Enregistrer l'URI de la photo prise dans l'état
+      uploadPhoto(photo.uri);
     }
   };
 
   const handleScanAgain = () => {
-    setScanned(false);
-    setPhotoUri(null); // Réinitialiser l'aperçu de la photo
+    setPhotoUri(null);
   };
-  /*const convertB64 = async (uri) => {
-    const base64 = await FileSystem.readAsStringAsync(uri, { encoding: FileSystem.EncodingType.Base64 });
-    console.log(base64);
-    return base64;
-    
-  };*/
+
   const uploadPhoto = async (uri) => {
-   // const base64 = await convertB64(uri)
     const formData = new FormData();
-    formData.append('uri', uri)
-    formData.append('photo', {
-      uri: uri,
-      type: 'image/jpg',
-      name: 'photo.jpg',
-    });
-
+    formData.append('uri', uri);
+   /* formData.append('photo', {  uri: uri,
+       type: 'image/jpg', 
+       name: 'photo.jpg',
+      });
+    */
     formData.append('imageUrl', uri);
-    formData.append('date', new Date().toISOString()); // a parametrer au format J/M/A : H:Min
-    //formData.append('base64Image', base64); 
-    try {
+    formData.append('date', new Date().toISOString());
 
+    try {
       const response = await fetch('http://192.168.1.106:3000/api/send-contract', {
         method: 'POST',
         body: formData,
         headers: {
           'Content-Type': 'multipart/form-data',
         },
-        
       });
-
+      console.log(response.body);
+      
       const data = await response.json();
       console.log('Réponse de l\'API:', data);
     } catch (error) {
       console.error('Erreur lors de l\'envoi de la photo:', error);
+      
     }
   };
 
-  if (hasPermission === null) {
-    return <Text>Autorisez-nous à utiliser votre caméra</Text>;
+  if (!permission) {
+    return <View />;
   }
-  if (hasPermission === false) {
-    return <Text>Nous ne pouvons accéder à votre caméra</Text>;
+
+  if (!permission.granted) {
+    return (
+      <View style={styles.container}>
+        <Text style={{ textAlign: 'center' }}>Nous avons besoin de votre permission pour utulisez la camera</Text>
+        <Button onPress={requestPermission} title="Grant Permission" />
+      </View>
+    );
   }
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}> {'Ramasse'.toUpperCase()} </Text>
       <Text style={styles.subtitle}> {'Blue Project'.toUpperCase()} </Text>
-      <Camera
+      <CameraView
         ref={cameraRef}
         style={styles.camera}
-        type={Camera.Constants.Type.back}
+        type={'back'} 
+        flashMode={'off'}
       />
-     
-      <Button style={styles.boutonRetour}
+      <Button
         title='Prendre une photo'
-        onPress={handleTakePhoto} color='#7ed957' />
-
+        onPress={handleTakePhoto}
+        color='#7ed957'
+      />
       {photoUri && (
         <View style={styles.photoPreview}>
           <Image source={{ uri: photoUri }} style={styles.previewImage} />
         </View>
       )}
-
-      {scanned && (
+      {photoUri && (
         <View style={styles.buttonNouveau}>
           <Button title="Nouveau Qr code" onPress={handleScanAgain} color="#7ed957" />
         </View>

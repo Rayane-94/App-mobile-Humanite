@@ -17,3 +17,6 @@ react:
 npm install react-native-image-base64 pour convertir en b64
 import { FileSystem } from 'expo-file-system'; 
 import ImageToBase64 from 'react-native-image-base64'; 
+
+problème:
+Lors du scan et de l'envoie post du contrat Erreur lors de l'envoi de la photo: [SyntaxError: JSON Parse error: Unexpected character: <]
