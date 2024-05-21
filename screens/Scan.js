@@ -63,8 +63,6 @@ export default function Scan() {
     }
 };
 
-
-
   if (!permission) {
     return <View />;
   }
