@@ -21,6 +21,7 @@ export default function Scan() {
       console.log('Photo prise:', photo.uri);
       setPhotoUri(photo.uri);
       uploadPhoto(photo.uri);
+
     }
   };
 
@@ -31,31 +32,38 @@ export default function Scan() {
   const uploadPhoto = async (uri) => {
     const formData = new FormData();
     formData.append('uri', uri);
-   /* formData.append('photo', {  uri: uri,
-       type: 'image/jpg', 
-       name: 'photo.jpg',
-      });
-    */
+    console.log('URI:', uri);
+
+    formData.append('photo', { 
+        uri: uri,
+        type: 'image/jpg',
+        name: 'photo.jpg',
+    });
+
     formData.append('imageUrl', uri);
-    formData.append('date', new Date().toISOString());
+    console.log('Image URL:', uri);
+
+    const date = new Date().toISOString();
+    formData.append('date', date);
+    console.log('Date:', date);
 
     try {
-      const response = await fetch('http://192.168.1.106:3000/api/send-contract', {
-        method: 'POST',
-        body: formData,
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-      console.log(response.body);
-      
-      const data = await response.json();
-      console.log('Réponse de l\'API:', data);
+        const response = await fetch('http://192.168.1.106:5000/api/send-contract', {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+        });
+
+        const data = await response.json();
+        console.log('Réponse de l\'API:', data);
     } catch (error) {
-      console.error('Erreur lors de l\'envoi de la photo:', error);
-      
+        console.error('Erreur lors de l\'envoi de la photo:', error);
     }
-  };
+};
+
+
 
   if (!permission) {
     return <View />;
