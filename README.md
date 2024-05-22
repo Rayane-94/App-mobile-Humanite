@@ -21,3 +21,10 @@ import ImageToBase64 from 'react-native-image-base64';
 
 problème:
 Lors du scan et de l'envoie post du contrat Erreur lors de l'envoi de la photo: [SyntaxError: JSON Parse error: Unexpected character: <]
+
+MongoDB:
+
+Tools :Mongo Compass,MongoDBShell
+
+commande : mongosh verifier connection et installation
+
