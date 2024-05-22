@@ -12,6 +12,7 @@ Commande GIT:
 
 git status = regarder tout les changement apporter 
 git branch = ouvre toute les branches
+git reset --hard HEAD = back au dernier commit existant
 
 react:
 npm install react-native-image-base64 pour convertir en b64
