@@ -26,5 +26,14 @@ MongoDB:
 
 Tools :Mongo Compass,MongoDBShell
 
-commande : mongosh verifier connection et installation
+commande : 
+-mongosh verifier connection et installation de mongo et acceder au terminal de mongo 
+-show dbs 
+-use "dbname"
+-show collections
+-db."dbname".insertOne({champ 1 : "Valeur1", champ2 ...})
+db."nomcollection".find() = verification de l'envoie de données dans la collection
+la methode find recuperer les 20 premier document taper it pour itérer les 20 prochain document
+-help 
+-exit
 
