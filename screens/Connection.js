@@ -1,12 +1,46 @@
 import React, { useState } from 'react';
-import { StyleSheet, SafeAreaView, View, Image, Text, TouchableOpacity, TextInput, Button} from 'react-native';
+import { StyleSheet, SafeAreaView, View, Alert, Image, Text, TouchableOpacity, TextInput, Button} from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
+
+//const HomeScreen = ({ navigation }) => {
 export default function Connection({ navigation }) {
+  
   const [form, setForm] = useState({
-    email: '',
-    password: '',
+    adresse_email: '',
+    mot_de_passe: '',
   });
+
+  const sendLoginData = async ({navigation}) => {
+
+    const formData = new FormData();
+  formData.append('adresse_email', form.adresse_email);
+  formData.append('mot_de_passe', form.mot_de_passe);
+
+    try {
+        const response = await fetch('http://192.168.1.106:5000/api/login', {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            
+        });
+
+        const data = await response.json();
+      if(response.ok){
+        Alert.alert('Connexion reussi', data.message)
+        navigation.navigate('Home')
+      } else{
+        
+        Alert.alert('Erreur', data.message)
+      }
+    } catch (error) {
+        Alert.alert("Une erreur s'est produite veuillez ressayer");
+    }
+};
+
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#e8ecf4' }}>
       <View style={styles.container}>
@@ -33,35 +67,32 @@ export default function Connection({ navigation }) {
                 autoCorrect={false}
                 clearButtonMode="while-editing"
                 keyboardType="email-address"
-                onChangeText={email => setForm({ ...form, email })}
-                placeholder="Saissisez e-mail"
+                onChangeText={adresse_email => setForm({ ...form, adresse_email })}
+                placeholder="Saissisez votre e-mail"
                 placeholderTextColor="#6b7280"
                 style={styles.inputControl}
-                value={form.email} />
+                value={form.adresse_email} />
             </View>
             <View style={styles.input}>
               <Text style={styles.inputLabel}>Mot de passe</Text>
               <TextInput
                 autoCorrect={false}
                 clearButtonMode="while-editing"
-                onChangeText={password => setForm({ ...form, password })}
+                onChangeText={mot_de_passe => setForm({ ...form, mot_de_passe })}
                 placeholder="Saississez le mot de passe"
                 placeholderTextColor="#6b7280"
                 style={styles.inputControl}
                 secureTextEntry={true}
-                value={form.password} />
+                value={form.mot_de_passe} />
             </View>
             <View style={styles.formAction}>
               <TouchableOpacity
-                onPress={() => {
-                  // handle onPress
-                }}>
+                onPress={() => { sendLoginData({navigation}) }}>
                 <View style={styles.btn}>
                   <Text style={styles.btnText}>Se connecter</Text>
                 </View>
               </TouchableOpacity>
             </View>
-            <Text style={styles.formLink}>Mot de passe oublier ?</Text>
           </View>
         </KeyboardAwareScrollView>
         <Button
@@ -97,7 +128,7 @@ const styles = StyleSheet.create({
     marginVertical: 36,
   },
   ImgLogo: {
-    width: 150,
+    width: 225,
     height: 150,
     alignSelf: 'center',
     marginBottom: 20,
@@ -114,13 +145,6 @@ const styles = StyleSheet.create({
     marginTop: 4,
     marginBottom: 16,
   },
-  formLink: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#075eec',
-    textAlign: 'center',
-  },
-  /** Input */
   input: {
     marginBottom: 16,
   },
