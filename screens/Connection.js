@@ -11,34 +11,29 @@ export default function Connection({ navigation }) {
     mot_de_passe: '',
   });
 
-  const sendLoginData = async ({navigation}) => {
-
-    const formData = new FormData();
-  formData.append('adresse_email', form.adresse_email);
-  formData.append('mot_de_passe', form.mot_de_passe);
-
+  const sendLoginData = async () => {
     try {
-        const response = await fetch('http://192.168.1.106:5000/api/login', {
-            method: 'POST',
-            body: formData,
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            
-        });
+      const response = await fetch('http://192.168.1.106:5000/api/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(form),
+      });
 
-        const data = await response.json();
-      if(response.ok){
-        Alert.alert('Connexion reussi', data.message)
-        navigation.navigate('Home')
-      } else{
-        
-        Alert.alert('Erreur', data.message)
+      const data = await response.json();
+
+      if (response.ok) {
+        Alert.alert('Connexion réussie', data.message);
+        navigation.navigate('Home');
+      } else {
+        Alert.alert('Erreur', data.message);
       }
     } catch (error) {
-        Alert.alert("Une erreur s'est produite veuillez ressayer");
+      console.error(error);
+      Alert.alert("Une erreur s'est produite, veuillez réessayer");
     }
-};
+  };
 
 
   return (

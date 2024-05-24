@@ -98,7 +98,7 @@ export default function Scan() {
       )}
       {photoUri && (
         <View style={styles.buttonNouveau}>
-          <Button title="Nouveau Qr code" onPress={handleScanAgain} color="#7ed957" />
+          <Button title="Nouveau Contrat" onPress={handleScanAgain} color="#7ed957" />
         </View>
       )}
     </View>
