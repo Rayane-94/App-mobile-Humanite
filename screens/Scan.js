@@ -1,13 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Button, Text, View, StyleSheet, Image } from 'react-native';
 import { CameraView, useCameraPermissions } from 'expo-camera';
-//import { useNavigation } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 
 export default function Scan() {
   //const navigation = useNavigation();
+  const navigation = useNavigation();
   const [permission, requestPermission] = useCameraPermissions();
   const [photoUri, setPhotoUri] = useState(null);
-  const cameraRef = useRef(null);
+  const cameraRef = useRef(null); 
 
   useEffect(() => {
     if (permission && permission.granted) {
@@ -75,6 +76,27 @@ export default function Scan() {
       </View>
     );
   }
+const handleLogout = async () => {
+  try {
+    const token = 'eyJhbGciOiJIUzI1NiJ9.eyJSb2xlIjoiQWRtaW4iLCJJc3N1ZXIiOiJJc3N1ZXIiLCJVc2VybmFtZSI6IkphdmFJblVzZSIsImV4cCI6MTcxNjgxODk0OCwiaWF0IjoxNzE2ODE4OTQ4fQ.zjhDQ87DSsq4W9uLylVj7fWBEvncWmi3p22ffdBeiz4';
+    const response = await fetch ('http://192.168.1.106:5000/api/logout',{
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + token
+    },
+    body: null
+  });
+
+  const data = await response.json();
+  console.log(data.message);
+  navigation.navigate('Connection');
+  }      
+  catch (error){
+  console.error('Erreur lors de la deconexion', error);
+  }
+}
+
 
   return (
     <View style={styles.container}>
@@ -86,6 +108,7 @@ export default function Scan() {
         type={'back'} 
         flashMode={'off'}
       />
+      <Button style={styles.deconexion} title="Deconexion" onPress={handleLogout} color='#FF6347' />
       <Button
         title='Prendre une photo'
         onPress={handleTakePhoto}
@@ -101,6 +124,7 @@ export default function Scan() {
           <Button title="Nouveau Contrat" onPress={handleScanAgain} color="#7ed957" />
         </View>
       )}
+      
     </View>
   );
 }
@@ -119,7 +143,7 @@ const styles = StyleSheet.create({
   subtitle: {
     fontSize: 40,
     color: '#629AE5',
-    marginBottom:50,
+    marginBottom:10,
   },
   boutonRetour: {
     marginBottom:50,
@@ -142,5 +166,9 @@ const styles = StyleSheet.create({
     width: 150,
     height: 150,
     resizeMode: 'contain',
+  },
+  deconexion: {
+    //personalisation du btn deco
+    borderRadius: 40,
   },
 });

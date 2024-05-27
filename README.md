@@ -26,7 +26,7 @@ MongoDB:
 
 Tools :Mongo Compass,MongoDBShell
 
-commande : 
+Commande : 
 -mongosh verifier connection et installation de mongo et acceder au terminal de mongo 
 -show dbs 
 -use "dbname"
@@ -37,3 +37,5 @@ la methode find recuperer les 20 premier document taper it pour itérer les 20 p
 -help 
 -exit
 
+Dependance:
+npm install jsonwebtoken
