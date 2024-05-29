@@ -39,3 +39,4 @@ la methode find recuperer les 20 premier document taper it pour itérer les 20 p
 
 Dependance:
 npm install jsonwebtoken
+npm install dotenv  pour cacher la cles secrete dans la machine pour que si commit en ligne invisible

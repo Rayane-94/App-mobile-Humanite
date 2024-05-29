@@ -4,6 +4,7 @@ import { CameraView, useCameraPermissions } from 'expo-camera';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+
 export default function Scan() {
   const navigation = useNavigation();
   const [permission, requestPermission] = useCameraPermissions();
