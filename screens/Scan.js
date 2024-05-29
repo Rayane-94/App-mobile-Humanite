@@ -1,14 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Button, Text, View, StyleSheet, Image } from 'react-native';
+import { Button, Text, View, StyleSheet, Image, Alert } from 'react-native';
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Scan() {
-  //const navigation = useNavigation();
   const navigation = useNavigation();
   const [permission, requestPermission] = useCameraPermissions();
   const [photoUri, setPhotoUri] = useState(null);
-  const cameraRef = useRef(null); 
+  const cameraRef = useRef(null);
 
   useEffect(() => {
     if (permission && permission.granted) {
@@ -22,7 +22,6 @@ export default function Scan() {
       console.log('Photo prise:', photo.uri);
       setPhotoUri(photo.uri);
       uploadPhoto(photo.uri);
-
     }
   };
 
@@ -62,7 +61,7 @@ export default function Scan() {
     } catch (error) {
         console.error('Erreur lors de l\'envoi de la photo:', error);
     }
-};
+  };
 
   if (!permission) {
     return <View />;
@@ -71,44 +70,57 @@ export default function Scan() {
   if (!permission.granted) {
     return (
       <View style={styles.container}>
-        <Text style={{ textAlign: 'center' }}>Nous avons besoin de votre permission pour utulisez la camera</Text>
+        <Text style={{ textAlign: 'center' }}>Nous avons besoin de votre permission pour utiliser la caméra</Text>
         <Button onPress={requestPermission} title="Grant Permission" />
       </View>
     );
   }
-const handleLogout = async () => {
-  try {
-    const token = 'eyJhbGciOiJIUzI1NiJ9.eyJSb2xlIjoiQWRtaW4iLCJJc3N1ZXIiOiJJc3N1ZXIiLCJVc2VybmFtZSI6IkphdmFJblVzZSIsImV4cCI6MTcxNjgxODk0OCwiaWF0IjoxNzE2ODE4OTQ4fQ.zjhDQ87DSsq4W9uLylVj7fWBEvncWmi3p22ffdBeiz4';
-    const response = await fetch ('http://192.168.1.106:5000/api/logout',{
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer ' + token
-    },
-    body: null
-  });
 
-  const data = await response.json();
-  console.log(data.message);
-  navigation.navigate('Connection');
-  }      
-  catch (error){
-  console.error('Erreur lors de la deconexion', error);
-  }
-}
+  const handleLogout = async () => {
+    try {
+      const token = await AsyncStorage.getItem('userToken');
+      if (!token) {
+        throw new Error('Token non trouvé');
+      }
+      
+      console.log('Token récupéré:', token);
 
+      const response = await fetch('http://192.168.1.106:5000/api/logout', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + token
+        },
+        body: null
+      });
+
+      const data = await response.json();
+      console.log('Réponse de déconnexion:', data);
+
+      if (response.ok) {
+        await AsyncStorage.removeItem('userToken');
+        navigation.navigate('Connection');
+        Alert.alert('Déconnexion réussie', data.message);
+      } else {
+        Alert.alert('Erreur', data.message);
+      }
+    } catch (error) {
+      console.error('Erreur lors de la déconnexion:', error);
+      Alert.alert('Erreur lors de la déconnexion', error.message);
+    }
+  };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}> {'Ramasse'.toUpperCase()} </Text>
-      <Text style={styles.subtitle}> {'Blue Project'.toUpperCase()} </Text>
+      <Text style={styles.title}>{'Ramasse'.toUpperCase()}</Text>
+      <Text style={styles.subtitle}>{'Blue Project'.toUpperCase()}</Text>
       <CameraView
         ref={cameraRef}
         style={styles.camera}
         type={'back'} 
         flashMode={'off'}
       />
-      <Button style={styles.deconexion} title="Deconexion" onPress={handleLogout} color='#FF6347' />
+      <Button style={styles.deconnexion} title="Déconnexion" onPress={handleLogout} color='#FF6347' />
       <Button
         title='Prendre une photo'
         onPress={handleTakePhoto}
@@ -124,7 +136,6 @@ const handleLogout = async () => {
           <Button title="Nouveau Contrat" onPress={handleScanAgain} color="#7ed957" />
         </View>
       )}
-      
     </View>
   );
 }
@@ -143,13 +154,13 @@ const styles = StyleSheet.create({
   subtitle: {
     fontSize: 40,
     color: '#629AE5',
-    marginBottom:10,
+    marginBottom: 10,
   },
   boutonRetour: {
-    marginBottom:50,
+    marginBottom: 50,
   },
   camera: {
-    marginBottom:50,
+    marginBottom: 50,
     width: '60%',
     height: '40%',
   },
@@ -167,8 +178,7 @@ const styles = StyleSheet.create({
     height: 150,
     resizeMode: 'contain',
   },
-  deconexion: {
-    //personalisation du btn deco
+  deconnexion: {
     borderRadius: 40,
   },
 });

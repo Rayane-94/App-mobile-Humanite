@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { StyleSheet, SafeAreaView, View, Alert, Image, Text, TouchableOpacity, TextInput, Button} from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 //const HomeScreen = ({ navigation }) => {
@@ -24,6 +25,7 @@ export default function Connection({ navigation }) {
       const data = await response.json();
 
       if (response.ok) {
+        await AsyncStorage.setItem('userToken', data.token); //stocker le jeton JWT sous la clé 'userToken'. Cela permet de sauvegarder le token de manière persistante sur l'appareil de l'utilisateur
         Alert.alert('Connexion réussie', data.message);
         navigation.navigate('Home');
       } else {

@@ -9,6 +9,7 @@
     "web": "expo start --web"
   },
   "dependencies": {
+    "@react-native-async-storage/async-storage": "^1.23.1",
     "@react-navigation/native": "^6.1.17",
     "@react-navigation/native-stack": "^6.9.26",
     "expo": "~51.0.8",
@@ -16,6 +17,7 @@
     "expo-file-system": "~17.0.1",
     "expo-status-bar": "~1.12.1",
     "jsonwebtoken": "^9.0.2",
+    "jwt-decode": "^4.0.0",
     "multer": "^1.4.5-lts.1",
     "navigation": "^6.2.0",
     "react": "^18.2.0",
