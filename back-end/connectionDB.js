@@ -1,7 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const app = express();
-
+const Thing = require('./models/Contract');
 
 const uri = "mongodb+srv://rayane:rayane@cluster0.tneegxg.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
 

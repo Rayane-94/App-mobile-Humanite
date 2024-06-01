@@ -1,7 +1,7 @@
 const express = require('express');
+const connectDBV2 = require('./server');
 const app = express();
 const contractController = require('./controller/contractController');
-const userController = require ('./controller/userController');
 
 // Middleware pour analyser le corps des requêtes entrantes au format JSON
 app.use(express.json());
@@ -15,7 +15,6 @@ app.use((req, res, next) => {
 });
 
 // Associer tout les route au controller
-app.use('/', contractController);
-app.use('/', userController);
+app.use('/api', contractController);
 
 module.exports = app;
