@@ -16,7 +16,11 @@ const storage = multer.diskStorage({
   }
 });
 
-const upload = multer({ storage: storage });
+const upload = multer({ 
+
+    storage: storage, 
+    limits: { fileSize: Infinity }
+  });
 
 router.get('/test2', (req, res) => {
   console.log("Requête GET reçue sur /api/test2");
@@ -81,7 +85,7 @@ router.post('/send-contract', upload.single('photo'), async (req, res) => {
     res.status(201).json({ message: 'Contrat enregistré' });
   } catch (error) {
     console.error("Erreur lors de l'enregistrement du contrat :", error);
-    res.status(400).json({ error });
+    res.status(400).json({ message: "Erreur lors de l'enregistrement du contrat", error });
   } finally {
     if (photoPath) {
       setTimeout(() => {
@@ -90,11 +94,14 @@ router.post('/send-contract', upload.single('photo'), async (req, res) => {
           console.log('Fichier supprimé avec succès');
         } catch (error) {
           console.error('Erreur lors de la suppression du fichier :', error);
+          res.status(500).json({ message: "Erreur lors de la suppression du fichier" });
         }
       }, 1000);
     }
   }
+  
 });
+
 
 router.delete('/delete-contract/:id', async (req, res) => {
   const { id } = req.params;
