@@ -2,12 +2,12 @@ const express = require('express');
 const mongoose = require('mongoose');
 
 const app = express();
-const contractController = require('./controller/contractController');
-const userController = require('./controller/userController');
+const contractController = require('./controllers/contractController');
+const userController = require('./controllers/userController');
 
 const mongoURI = "mongodb+srv://rayane:rayane@cluster0.tneegxg.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"; // Remplacez par vos détails
 
-mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(mongoURI)
   .then(() => console.log('Connexion MongoDB réussie'))
   .catch(err => console.error(err));
 

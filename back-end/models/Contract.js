@@ -8,10 +8,10 @@ const ContractSchema = new mongoose.Schema({
          type: String,
          required: true 
     },
-    photo:{ 
+    /*photo:{ 
         type: String, 
         required: true
-     },
+     },*/
     imageUrl:{ 
         type: String, required: true 
     },

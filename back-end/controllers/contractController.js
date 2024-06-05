@@ -5,22 +5,14 @@ const fs = require('fs');
 const sharp = require('sharp');
 require('dotenv').config();
 
+const cloudinary = require("../utils/cloudinary")
+
+const upload = require("../middleware/multer");
+
+
+
 const router = express.Router();
 
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, 'uploads/');
-  },
-  filename: function (req, file, cb) {
-    cb(null, file.originalname);
-  }
-});
-
-const upload = multer({ 
-
-    storage: storage, 
-    limits: { fileSize: Infinity }
-  });
 
 router.get('/test2', (req, res) => {
   console.log("Requête GET reçue sur /api/test2");
@@ -60,48 +52,30 @@ router.get('/get-contract/:id', (req, res) => {
 
 router.post('/send-contract', upload.single('photo'), async (req, res) => {
   const { uri, date } = req.body;
-  const photoPath = req.file ? req.file.path : '';
-  const imageUrl = req.body.imageUrl || uri;
-
-  console.log("Données reçues pour l'envoi du contrat :", uri, date, imageUrl);
 
   try {
-    const compressedImageBuffer = await sharp(photoPath)
-      .resize({ width: 800 })
-      .jpeg({ quality: 100 })
-      .toBuffer();
+    if (!req.file) {
+      return res.status(400).json({ message: "Aucune image téléchargée" });
+    }
 
-    const base64Image = compressedImageBuffer.toString('base64');
+    // Téléchargez l'image sur Cloudinary
+    const result = await cloudinary.uploader.upload(req.file.path);
 
+    // Créez un nouveau contrat avec l'URL de l'image et d'autres informations
     const contract = new Contract({
       uri: uri,
-      photo: base64Image,
-      imageUrl: imageUrl,
+      imageUrl: result.secure_url, // URL sécurisée de l'image sur Cloudinary
       date: date
     });
 
     await contract.save();
     console.log("Contrat sauvegardé :", contract);
-    res.status(201).json({ message: 'Contrat enregistré' });
+    res.status(201).json({ message: 'Contrat enregistré', contract });
   } catch (error) {
     console.error("Erreur lors de l'enregistrement du contrat :", error);
     res.status(400).json({ message: "Erreur lors de l'enregistrement du contrat", error });
-  } finally {
-    if (photoPath) {
-      setTimeout(() => {
-        try {
-          fs.unlinkSync(photoPath);
-          console.log('Fichier supprimé avec succès');
-        } catch (error) {
-          console.error('Erreur lors de la suppression du fichier :', error);
-          res.status(500).json({ message: "Erreur lors de la suppression du fichier" });
-        }
-      }, 1000);
-    }
   }
-  
 });
-
 
 router.delete('/delete-contract/:id', async (req, res) => {
   const { id } = req.params;
