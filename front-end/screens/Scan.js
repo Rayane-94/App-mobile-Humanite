@@ -24,8 +24,8 @@ export default function Scan() {
       console.log('Photo prise:', photo.uri);
       setPhotoUri(photo.uri);
       if (photo.base64) {
-      setPhotoBase64(photo.base64);
-      uploadPhoto(photo.uri, photo.base64);
+        setPhotoBase64(photo.base64);
+        uploadPhoto(photo.uri, photo.base64);
       } else {
         console.error("La chaine de caractere en base 64 de l'image est non definie")
       }
@@ -37,12 +37,16 @@ export default function Scan() {
     setPhotoBase64(null);
   };
 
-  const uploadPhoto = async (uri, base64Image) => {
+  const uploadPhoto = async (uri) => {
     const formData = new FormData();
     formData.append('uri', uri);
     console.log('URI:', uri);
 
-    formData.append('photo', base64Image);
+    formData.append('photo', {
+      uri: uri,
+      type: 'image/jpeg', // or 'image/png' if your image is a png
+      name: 'photo.jpg', // you can choose any name
+    });
     console.log('Image en base64 ici mais trop longue pour etre afficher');
 
     formData.append('imageUrl', uri);
@@ -53,18 +57,16 @@ export default function Scan() {
     console.log('Date:', date);
 
     try {
-        const response = await fetch('http://192.168.1.106:5000/api/send-contract', {
-            method: 'POST',
-            body: formData,
-            headers: {
-                'Content-Type': 'multipart/form-data',
-            },
-        });
+      const response = await fetch('http://192.168.56.1:5000/api/send-contract', {
+        method: 'POST',
+        body: formData,
+      });
+      
 
-        const data = await response.json();
-        console.log('Réponse de l\'API:', data);
+      const data = await response.json();
+      console.log('Réponse de l\'API:', data);
     } catch (error) {
-        console.error('Erreur lors de l\'envoi de la photo:', error);
+      console.error('Erreur lors de l\'envoi de la photo:', error);
     }
   };
 
@@ -87,10 +89,10 @@ export default function Scan() {
       if (!token) {
         throw new Error('Token non trouvé');
       }
-      
+
       console.log('Token récupéré:', token);
 
-      const response = await fetch('http://192.168.1.106:5000/api/logout', {
+      const response = await fetch('http://192.168.56.1:5000/api/logout', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -122,7 +124,7 @@ export default function Scan() {
       <CameraView
         ref={cameraRef}
         style={styles.camera}
-        type={'back'} 
+        type={'back'}
         flashMode={'off'}
       />
       <Button style={styles.deconnexion} title="Déconnexion" onPress={handleLogout} color='#FF6347' />
