@@ -14,21 +14,18 @@ export default function Scan() {
 
   useEffect(() => {
     if (permission && permission.granted) {
-      // Vous pouvez effectuer des actions supplémentaires ici après l'obtention de l'autorisation
+      console.log("Permission de la caméra accordée");
+      
     }
   }, [permission]);
 
+
   const handleTakePhoto = async () => {
     if (cameraRef.current) {
-      const photo = await cameraRef.current.takePictureAsync({ base64: true });
+      const photo = await cameraRef.current.takePictureAsync();
       console.log('Photo prise:', photo.uri);
       setPhotoUri(photo.uri);
-      if (photo.base64) {
-        setPhotoBase64(photo.base64);
-        uploadPhoto(photo.uri, photo.base64);
-      } else {
-        console.error("La chaine de caractere en base 64 de l'image est non definie")
-      }
+      uploadPhoto(photo.uri);
     }
   };
 
@@ -57,11 +54,10 @@ export default function Scan() {
     console.log('Date:', date);
 
     try {
-      const response = await fetch('http://192.168.56.1:5000/api/send-contract', {
+      const response = await fetch('http://192.168.1.106:5000/api/send-contract', {
         method: 'POST',
         body: formData,
       });
-      
 
       const data = await response.json();
       console.log('Réponse de l\'API:', data);
@@ -92,7 +88,7 @@ export default function Scan() {
 
       console.log('Token récupéré:', token);
 
-      const response = await fetch('http://192.168.56.1:5000/api/logout', {
+      const response = await fetch('http://192.168.1.106:5000/api/logout', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

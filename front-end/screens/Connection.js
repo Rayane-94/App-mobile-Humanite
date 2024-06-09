@@ -14,7 +14,7 @@ export default function Connection({ navigation }) {
 
   const sendLoginData = async () => {
     try {
-      const response = await fetch('http://192.168.56.1:5000/api/login', {
+      const response = await fetch('http://192.168.1.106:5000/api/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -25,7 +25,7 @@ export default function Connection({ navigation }) {
       const data = await response.json();
 
       if (response.ok) {
-        await AsyncStorage.setItem('userToken', data.token); //stocker le jeton JWT sous la clé 'userToken'. Cela permet de sauvegarder le token de manière persistante sur l'appareil de l'utilisateur
+        await AsyncStorage.setItem('userToken', data.token);  //stocker le jeton JWT sous la clé 'userToken'. Cela permet de sauvegarder le token de manière persistante sur l'appareil de l'utilisateur
         Alert.alert('Connexion réussie', data.message);
         navigation.navigate('Home');
       } else {
@@ -104,9 +104,9 @@ const styles = StyleSheet.create({
   container: {
     paddingVertical: 24,
     paddingHorizontal: 0,
-    flexGrow: 1,
-    flexShrink: 1,
-    flexBasis: 0,
+    flexGrow: 1,  // Permet à l'élément de grandir pour occuper tout l'espace disponible.
+    flexShrink: 1,  // Permet à l'élément de rétrécir si l'espace est limité.
+    flexBasis: 0, // La taille initiale de l'élément est de 0, ajustée ensuite par flexGrow et flexShrink.
   },
   title: {
     fontSize: 31,

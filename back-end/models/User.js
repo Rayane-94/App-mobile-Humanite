@@ -11,4 +11,4 @@ const UserSchema = new mongoose.Schema({
   }
 });
 
-module.exports = mongoose.model('User', UserSchema);
+module.exports = mongoose.model('User', UserSchema); //Mongoose convertira le model User en une collections "users" => pluriel + minuscules 
