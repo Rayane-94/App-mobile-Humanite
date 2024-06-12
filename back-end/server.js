@@ -5,7 +5,7 @@ const app = express();
 const contractController = require('./controllers/contractController');
 const userController = require('./controllers/userController');
 
-const mongoURI = "mongodb+srv://rayane:rayane@cluster0.tneegxg.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"; // Remplacez par vos détails
+const mongoURI = process.env.MY_MONGO_URI
 
 mongoose.connect(mongoURI)
   .then(() => console.log('Connexion MongoDB réussie'))

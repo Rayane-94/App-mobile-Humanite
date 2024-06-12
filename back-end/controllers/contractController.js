@@ -64,7 +64,7 @@ router.post('/send-contract', upload.single('photo'), async (req, res) => {
     // Créez un nouveau contrat avec l'URL de l'image et d'autres informations
     const contract = new Contract({
       uri: uri,
-      imageUrl: result.secure_url, // URL sécurisée de l'image sur Cloudinary
+      imageUrl: result.secure_url, 
       date: date
     });
 

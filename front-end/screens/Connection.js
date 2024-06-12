@@ -12,7 +12,24 @@ export default function Connection({ navigation }) {
     mot_de_passe: '',
   });
 
+  const emailRegex = /^[a-zA-Z0-9._]+@[a-zA-Z0-9]+\.[a-zA-Z]{2,}$/;
+  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
+
   const sendLoginData = async () => {
+
+    const { adresse_email, mot_de_passe } = form;
+
+   
+    if (!emailRegex.test(adresse_email)) {
+      Alert.alert('Erreur', 'Adresse e-mail invalide, caractere speciaux non autoriser');
+      return;
+    }
+
+    // Valider le mot de passe
+    if (!passwordRegex.test(mot_de_passe)) {
+      Alert.alert('Erreur', 'Le mot de passe doit comporter au moins une lettre majuscule, une lettre minuscule, un chiffre, un caractère spécial et avoir une longueur minimale de 8 caracteres');
+      return;
+    }
     try {
       const response = await fetch('http://192.168.1.106:5000/api/login', {
         method: 'POST',

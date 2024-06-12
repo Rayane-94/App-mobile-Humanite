@@ -9,7 +9,7 @@ export default function Scan() {
   const navigation = useNavigation();
   const [permission, requestPermission] = useCameraPermissions();
   const [photoUri, setPhotoUri] = useState(null);
-  const [photoBase64, setPhotoBase64] = useState(null);
+ // const [photoBase64, setPhotoBase64] = useState(null);
   const cameraRef = useRef(null);
 
   useEffect(() => {
@@ -31,7 +31,7 @@ export default function Scan() {
 
   const handleScanAgain = () => {
     setPhotoUri(null);
-    setPhotoBase64(null);
+    //setPhotoBase64(null);
   };
 
   const uploadPhoto = async (uri) => {
