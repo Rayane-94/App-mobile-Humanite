@@ -18,7 +18,7 @@ const ContractSchema = new mongoose.Schema({
     date:{
          type: Date, required: true 
     }, 
-   //vraie image image:{ type: String, required: true }, 
+   
     //userId:{ type: String, required: true },    
 });
 

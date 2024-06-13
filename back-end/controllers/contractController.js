@@ -1,14 +1,12 @@
 const express = require('express');
-const multer = require('multer');
+
 const Contract = require('../models/Contract');
-const fs = require('fs');
-const sharp = require('sharp');
+
 require('dotenv').config();
 
-const cloudinary = require("../utils/cloudinary")
+const cloudinary = require("../utils/cloudinary");
 
 const upload = require("../middleware/multer");
-
 
 
 const router = express.Router();
