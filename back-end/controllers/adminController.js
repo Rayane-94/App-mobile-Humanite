@@ -1,11 +1,16 @@
 const express = require('express');
-const Admin = require('../models/Admin');  
+const Admin = require('../models/Admin'); 
+const User = require('../models/User'); 
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
+
+const verifyAdmin = require('../middleware/verifyAdmin')
 
 const router = express.Router();
 
 router.use(express.json());
+
+
 
 router.get('/testAdmin', (req, res) => {
   console.log("Requête GET reçue sur /api/testAdmin");
@@ -43,7 +48,28 @@ router.post('/admin/login', async (req, res) => {
   }
 });
 
-router.get('/get-admin', (req, res) => {
+router.post('/admin/logout', (req, res) => {
+  const authHeader = req.headers.authorization;
+  console.log("Requête de déconnexion reçue avec le token :", authHeader);
+
+  if (!authHeader) {
+    console.log("Token manquant");
+    return res.status(401).json({ message: 'Token manquant, déconnexion impossible' });
+  }
+
+  const token = authHeader.split(' ')[1];
+
+  jwt.verify(token, process.env.TOKEN_KEY_SECRET, (err) => {
+    if (err) {
+      console.log("Token invalide ou expiré :", err);
+      return res.status(401).json({ message: 'Token invalide ou expiré, déconnexion impossible' });
+    }
+
+    res.status(200).json({ message: 'Déconnexion réussie' });
+  });
+});
+
+router.get('/get-admin', verifyAdmin, (req, res) => {
   console.log("Requête GET reçue sur /api/get-admins");
   Admin.find()
     .then(admins => {
@@ -56,7 +82,6 @@ router.get('/get-admin', (req, res) => {
     });
 });
 
-// Route pour récupérer un admin par son ID
 router.get('/get-admin/:id', (req, res) => {
   const { id } = req.params;
   console.log("Requête GET reçue sur /api/get-admin/" + id);
@@ -75,8 +100,8 @@ router.get('/get-admin/:id', (req, res) => {
     });
 });
 
-// Route pour mettre à jour un admin par son ID
-router.put('/update-admin/:id', async (req, res) => {
+
+router.put('/update-admin/:id', verifyAdmin, async (req, res) => {
   const { id } = req.params;
   const { adresse_email, mot_de_passe, nom, prenom } = req.body;
   console.log("Requête PUT reçue sur /api/update-admin/" + id);
@@ -124,7 +149,6 @@ router.put('/update-admin/:id', async (req, res) => {
   }
 });
 
-// Route pour supprimer un admin par son ID
 router.delete('/delete-admin/:id', async (req, res) => {
   const { id } = req.params;
   console.log("Requête DELETE reçue sur /api/delete-admin/" + id);
@@ -139,6 +163,125 @@ router.delete('/delete-admin/:id', async (req, res) => {
   } catch (error) {
     console.error("Erreur lors de la suppression de l'admin :", error);
     res.status(500).json({ message: "Erreur lors de la suppression de l'admin" });
+  }
+});
+
+//Gestion des user par les admins
+
+// router.post('/admin/add-user', async (req, res) => {
+//   const { nom, prenom, adresse_email, mot_de_passe } = req.body;
+
+//   try {
+
+//     // Créez un nouveau contrat avec l'URL de l'image et d'autres informations
+//     const contract = new Contract({
+//       uri: uri,
+//       imageUrl: result.secure_url, 
+//       date: date
+//     });
+
+//     await contract.save();
+//     console.log("Contrat sauvegardé :", contract);
+//     res.status(201).json({ message: 'Contrat enregistré', contract });
+//   } catch (error) {
+//     console.error("Erreur lors de l'enregistrement du contrat :", error);
+//     res.status(400).json({ message: "Erreur lors de l'enregistrement du contrat", error });
+//   }
+// });
+
+router.get('/get-user', verifyAdmin, (req, res) => {
+  console.log("Requête GET reçue sur /api/get-user");
+  User.find()
+    .then(users => {
+      console.log("Utilisateurs trouvés :", users);
+      res.status(200).json(users);
+    })
+    .catch(error => {
+      console.error("Erreur lors de la récupération des utilisateurs :", error);
+      res.status(400).json({ error });
+    });
+});
+
+router.get('/get-user/:id', verifyAdmin, (req, res) => {
+  const { id } = req.params;
+  console.log("Requête GET reçue sur /api/get-user/" + id);
+  User.findById(id)
+    .then(user => {
+      if (!user) {
+        console.log("Utilisateur non trouvé");
+        return res.status(404).json({ message: "Utilisateur non trouvé" });
+      }
+      console.log("Utilisateur trouvé :", user);
+      res.status(200).json({ user });
+    })
+    .catch(error => {
+      console.error("Erreur lors de la récupération de l'utilisateur :", error);
+      res.status(400).json({ error });
+    });
+});
+
+router.put('/update-user/:id', verifyAdmin, async (req, res) => {
+  const { id } = req.params;
+  const { adresse_email, mot_de_passe, nom, prenom } = req.body;
+  console.log("Requête PUT reçue sur /api/update-user/" + id);
+
+  try {
+    const user = await User.findById(id);
+    if (!user) {
+      console.log("Utilisateur non trouvé");
+      return res.status(404).json({ message: "Utilisateur non trouvé" });
+    }
+
+    let aucunChampUpdate = false;
+
+    if (adresse_email !== undefined && adresse_email !== user.adresse_email) {
+      user.adresse_email = adresse_email;
+      aucunChampUpdate = true;
+    }
+
+    if (mot_de_passe !== undefined && mot_de_passe !== user.mot_de_passe) {
+      user.mot_de_passe = mot_de_passe;
+      aucunChampUpdate = true;
+    }
+
+    if (nom !== undefined && nom !== user.nom) {
+      user.nom = nom;
+      aucunChampUpdate = true;
+    }
+
+    if (prenom !== undefined && prenom !== user.prenom) {
+      user.prenom = prenom;
+      aucunChampUpdate = true;
+    }
+
+    if (!aucunChampUpdate) {
+      console.log("Aucun champ n'a été modifié");
+      return res.status(400).json({ message: "Aucun champ n'a été modifié" });
+    }
+
+    await user.save();
+    console.log("Utilisateur mis à jour avec succès :", user);
+    return res.status(200).json({ message: "Utilisateur mis à jour avec succès", user });
+  } catch (error) {
+    console.error("Erreur lors de la mise à jour de l'utilisateur :", error);
+    return res.status(500).json({ message: "Erreur lors de la mise à jour de l'utilisateur" });
+  }
+});
+
+router.delete('/delete-user/:id', verifyAdmin, async (req, res) => {
+  const { id } = req.params;
+  console.log("Requête DELETE reçue sur /api/delete-user/" + id);
+  try {
+    const deletedUser = await User.findByIdAndDelete(id);
+    if (!deletedUser) {
+      console.log("Utilisateur non trouvé");
+      return res.status(404).json({ message: "Utilisateur non trouvé" });
+    }
+    console.log("Utilisateur supprimé avec succès :", deletedUser);
+    res.status(201).json({ message: "Utilisateur supprimé avec succès", deletedUser });
+  } catch (error) {
+    console.error("Erreur lors de la suppression de l'utilisateur :", error);
+    res.status(500).json({ message: "Erreur lors de la suppression de l'utilisateur" });
   }
 });
 
