@@ -7,7 +7,7 @@ require('dotenv').config();
 const cloudinary = require("../utils/cloudinary");
 
 const upload = require("../middleware/multer");
-
+const verifyAdmin = require('../middleware/verifyAdmin')
 
 const router = express.Router();
 
@@ -17,7 +17,7 @@ router.get('/test2', (req, res) => {
   res.status(200).send({ message: "ceci est un test du controlleur" });
 });
 
-router.get('/get-contract', (req, res) => {
+router.get('/admin/get-contract', verifyAdmin, (req, res) => {
   console.log("Requête GET reçue sur /api/get-contract");
   Contract.find()
     .then(contracts => {
@@ -30,7 +30,7 @@ router.get('/get-contract', (req, res) => {
     });
 });
 
-router.get('/get-contract/:id', (req, res) => {
+router.get('/admin/get-contract/:id', verifyAdmin, (req, res) => {
   const { id } = req.params;
   console.log("Requête GET reçue sur /api/get-contract/" + id);
   Contract.findById(id)
@@ -75,7 +75,7 @@ router.post('/send-contract', upload.single('photo'), async (req, res) => {
   }
 });
 
-router.delete('/delete-contract/:id', async (req, res) => {
+router.delete('/admin/delete-contract/:id',verifyAdmin, async (req, res) => {
   const { id } = req.params;
   console.log("Requête DELETE reçue sur /api/delete-contract/" + id);
   try {

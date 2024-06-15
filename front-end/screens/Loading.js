@@ -9,7 +9,7 @@ const Loading = ({navigation}) => {
         <View style={styles.container}>
       <Text style={styles.title}> {'Ramasse'.toUpperCase()} </Text>
       <Text style={styles.subtitle}> {'Blue Project'.toUpperCase()} </Text>
-      <Text style={styles.subtitle}> {'Fin du chargement +chrono a add'} </Text>
+      <Text style={styles.subtitle}> {'Fin du chargement + chrono '} </Text>
 
       <Image
         style={styles.logo}

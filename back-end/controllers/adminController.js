@@ -2,15 +2,20 @@ const express = require('express');
 const Admin = require('../models/Admin'); 
 const User = require('../models/User'); 
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
 require('dotenv').config();
 
 const verifyAdmin = require('../middleware/verifyAdmin')
 
+async function hashPassword(password) {
+  const saltRounds = 10;
+  const hashedPassword = await bcrypt.hash(password, saltRounds);
+  return hashedPassword;
+}
+
 const router = express.Router();
 
 router.use(express.json());
-
-
 
 router.get('/testAdmin', (req, res) => {
   console.log("Requête GET reçue sur /api/testAdmin");
@@ -31,7 +36,7 @@ router.post('/admin/login', async (req, res) => {
       return res.status(400).json({ message: 'Adresse email ou mot de passe incorrect' });
     }
 
-    const comparaisonMDP = mot_de_passe === admin.mot_de_passe;
+    const comparaisonMDP = await bcrypt.compare(mot_de_passe, admin.mot_de_passe);
 
     if (!comparaisonMDP) {
       console.log("Mot de passe incorrect");
@@ -69,7 +74,30 @@ router.post('/admin/logout', (req, res) => {
   });
 });
 
-router.get('/get-admin', verifyAdmin, (req, res) => {
+
+router.post('/admin/add-admin', verifyAdmin, async (req, res) => {
+  const { nom, prenom, adresse_email, mot_de_passe } = req.body;
+
+  try {
+    
+    const existingAdmin = await Admin.findOne({ adresse_email });
+    if (existingAdmin) {
+      return res.status(400).json({ message: 'Cette adresse email est deja utiliser' });
+    }
+
+    const hashedPassword = await bcrypt.hash(mot_de_passe, 10); 
+    const newAdmin = new Admin({ nom, prenom, adresse_email, mot_de_passe: hashedPassword });
+    await newAdmin.save();
+
+    console.log("L'administrateur a bien été ajouter :", newAdmin);
+    res.status(201).json({ message: "L'administrateur a bien été ajouter ", user: newAdmin });
+  } catch (error) {
+    console.error("Erreur lors de l'ajout de 'administrateur :", error);
+    res.status(400).json({ message: "Erreur lors de l'ajout de l'administrateur", error });
+  }
+});
+
+router.get('/admin/get-admin', verifyAdmin, (req, res) => {
   console.log("Requête GET reçue sur /api/get-admins");
   Admin.find()
     .then(admins => {
@@ -82,7 +110,7 @@ router.get('/get-admin', verifyAdmin, (req, res) => {
     });
 });
 
-router.get('/get-admin/:id', (req, res) => {
+router.get('/admin/get-admin/:id',verifyAdmin, (req, res) => {
   const { id } = req.params;
   console.log("Requête GET reçue sur /api/get-admin/" + id);
   Admin.findById(id)
@@ -101,7 +129,7 @@ router.get('/get-admin/:id', (req, res) => {
 });
 
 
-router.put('/update-admin/:id', verifyAdmin, async (req, res) => {
+router.put('/admin/update-admin/:id', verifyAdmin, async (req, res) => {
   const { id } = req.params;
   const { adresse_email, mot_de_passe, nom, prenom } = req.body;
   console.log("Requête PUT reçue sur /api/update-admin/" + id);
@@ -121,7 +149,8 @@ router.put('/update-admin/:id', verifyAdmin, async (req, res) => {
     }
 
     if (mot_de_passe !== undefined && mot_de_passe !== admin.mot_de_passe) {
-      admin.mot_de_passe = mot_de_passe;
+      const hashedPassword = await bcrypt.hash(mot_de_passe, 10);
+      admin.mot_de_passe = hashedPassword;
       aucunChampUpdate = true;
     }
 
@@ -149,7 +178,7 @@ router.put('/update-admin/:id', verifyAdmin, async (req, res) => {
   }
 });
 
-router.delete('/delete-admin/:id', async (req, res) => {
+router.delete('/admin/delete-admin/:id', verifyAdmin, async (req, res) => {
   const { id } = req.params;
   console.log("Requête DELETE reçue sur /api/delete-admin/" + id);
   try {
@@ -166,30 +195,30 @@ router.delete('/delete-admin/:id', async (req, res) => {
   }
 });
 
-//Gestion des user par les admins
+router.post('/admin/add-user', verifyAdmin, async (req, res) => {
+  const { nom, prenom, adresse_email, mot_de_passe } = req.body;
 
-// router.post('/admin/add-user', async (req, res) => {
-//   const { nom, prenom, adresse_email, mot_de_passe } = req.body;
+  try {
+    
+    const existingUser = await User.findOne({ adresse_email });
+    if (existingUser) {
+      return res.status(400).json({ message: 'Cette adresse email est deja utiliser' });
+    }
 
-//   try {
+    const hashedPassword = await bcrypt.hash(mot_de_passe, 10); 
+    const newUser = new User({ nom, prenom, adresse_email, mot_de_passe: hashedPassword });
+    await newUser.save();
 
-//     // Créez un nouveau contrat avec l'URL de l'image et d'autres informations
-//     const contract = new Contract({
-//       uri: uri,
-//       imageUrl: result.secure_url, 
-//       date: date
-//     });
+    console.log("L'utilisateur a bien été ajouter :", newUser);
+    res.status(201).json({ message: "L'utilisateur a bien été ajouter ", user: newUser });
+  } catch (error) {
+    console.error("Erreur lors de l'ajout de l'utilisateur :", error);
+    res.status(400).json({ message: "Erreur lors de l'ajout de l'utilisateur", error });
+  }
+});
 
-//     await contract.save();
-//     console.log("Contrat sauvegardé :", contract);
-//     res.status(201).json({ message: 'Contrat enregistré', contract });
-//   } catch (error) {
-//     console.error("Erreur lors de l'enregistrement du contrat :", error);
-//     res.status(400).json({ message: "Erreur lors de l'enregistrement du contrat", error });
-//   }
-// });
 
-router.get('/get-user', verifyAdmin, (req, res) => {
+router.get('/admin/get-user', verifyAdmin, (req, res) => {
   console.log("Requête GET reçue sur /api/get-user");
   User.find()
     .then(users => {
@@ -202,7 +231,7 @@ router.get('/get-user', verifyAdmin, (req, res) => {
     });
 });
 
-router.get('/get-user/:id', verifyAdmin, (req, res) => {
+router.get('/admin/get-user/:id', verifyAdmin, (req, res) => {
   const { id } = req.params;
   console.log("Requête GET reçue sur /api/get-user/" + id);
   User.findById(id)
@@ -220,7 +249,7 @@ router.get('/get-user/:id', verifyAdmin, (req, res) => {
     });
 });
 
-router.put('/update-user/:id', verifyAdmin, async (req, res) => {
+router.put('/admin/update-user/:id', verifyAdmin, async (req, res) => {
   const { id } = req.params;
   const { adresse_email, mot_de_passe, nom, prenom } = req.body;
   console.log("Requête PUT reçue sur /api/update-user/" + id);
@@ -239,11 +268,6 @@ router.put('/update-user/:id', verifyAdmin, async (req, res) => {
       aucunChampUpdate = true;
     }
 
-    if (mot_de_passe !== undefined && mot_de_passe !== user.mot_de_passe) {
-      user.mot_de_passe = mot_de_passe;
-      aucunChampUpdate = true;
-    }
-
     if (nom !== undefined && nom !== user.nom) {
       user.nom = nom;
       aucunChampUpdate = true;
@@ -251,6 +275,12 @@ router.put('/update-user/:id', verifyAdmin, async (req, res) => {
 
     if (prenom !== undefined && prenom !== user.prenom) {
       user.prenom = prenom;
+      aucunChampUpdate = true;
+    }
+
+    if (mot_de_passe !== undefined) {
+      const hashedPassword = await bcrypt.hash(mot_de_passe, 10);
+      user.mot_de_passe = hashedPassword;
       aucunChampUpdate = true;
     }
 
@@ -268,7 +298,7 @@ router.put('/update-user/:id', verifyAdmin, async (req, res) => {
   }
 });
 
-router.delete('/delete-user/:id', verifyAdmin, async (req, res) => {
+router.delete('/admin/delete-user/:id', verifyAdmin, async (req, res) => {
   const { id } = req.params;
   console.log("Requête DELETE reçue sur /api/delete-user/" + id);
   try {
