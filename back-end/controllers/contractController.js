@@ -47,7 +47,7 @@ router.get('/admin/get-contract/:id', verifyAdmin, (req, res) => {
       res.status(400).json({ error });
     });
 });
-
+//Ajouter la verif de la validité du jwt avant add contrat
 router.post('/send-contract', upload.single('photo'), async (req, res) => {
   const { uri, date } = req.body;
 

@@ -31,7 +31,7 @@ export default function Connection({ navigation }) {
       return;
     }
     try {
-      const response = await fetch('http://192.168.1.106:5000/api/login', {
+      const response = await fetch('http://10.101.15.105:5000/api/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

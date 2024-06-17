@@ -54,7 +54,7 @@ export default function Scan() {
     console.log('Date:', date);
 
     try {
-      const response = await fetch('http://192.168.1.106:5000/api/send-contract', {
+      const response = await fetch('http://10.101.15.105:5000/api/send-contract', {
         method: 'POST',
         body: formData,
       });
@@ -88,7 +88,7 @@ export default function Scan() {
 
       console.log('Token récupéré:', token);
 
-      const response = await fetch('http://192.168.1.106:5000/api/logout', {
+      const response = await fetch('http://10.101.15.105:5000/api/logout', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
