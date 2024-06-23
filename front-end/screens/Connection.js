@@ -4,7 +4,6 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
-//const HomeScreen = ({ navigation }) => {
 export default function Connection({ navigation }) {
   
   const [form, setForm] = useState({
@@ -25,13 +24,13 @@ export default function Connection({ navigation }) {
       return;
     }
 
-    // Valider le mot de passe
+    
     if (!passwordRegex.test(mot_de_passe)) {
       Alert.alert('Erreur', 'Le mot de passe doit comporter au moins une lettre majuscule, une lettre minuscule, un chiffre, un caractère spécial et avoir une longueur minimale de 8 caracteres');
       return;
     }
     try {
-      const response = await fetch('http://10.101.15.105:5000/api/login', {
+      const response = await fetch('http://192.168.1.106:5000/api/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -42,7 +41,7 @@ export default function Connection({ navigation }) {
       const data = await response.json();
 
       if (response.ok) {
-        await AsyncStorage.setItem('userToken', data.token);  //stocker le jeton JWT sous la clé 'userToken'. Cela permet de sauvegarder le token de manière persistante sur l'appareil de l'utilisateur
+        await AsyncStorage.setItem('userToken', data.token);  
         Alert.alert('Connexion réussie', data.message);
         navigation.navigate('Home');
       } else {
@@ -181,7 +180,6 @@ const styles = StyleSheet.create({
     borderColor: '#C9D3DB',
     borderStyle: 'solid',
   },
-  /** Button */
   btn: {
     flexDirection: 'row',
     alignItems: 'center',

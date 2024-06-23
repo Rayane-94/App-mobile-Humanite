@@ -22,7 +22,7 @@ router.get('/testAdmin', (req, res) => {
   res.status(200).send({ message: "Ceci est un test du contrôleur admin" });
 });
 
-// Route de connexion pour les admins
+// MARCHE PAS POUR LE MOMENT QUAND ON UTILISE B CRYPT
 router.post('/admin/login', async (req, res) => {
   const { adresse_email, mot_de_passe } = req.body;
   console.log("Données reçues pour la connexion admin :", adresse_email, mot_de_passe);

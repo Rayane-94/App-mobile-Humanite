@@ -41,10 +41,9 @@ export default function Scan() {
 
     formData.append('photo', {
       uri: uri,
-      type: 'image/jpeg', // or 'image/png' if your image is a png
-      name: 'photo.jpg', // you can choose any name
+      type: 'image/jpeg', 
+      name: 'photo.jpg', 
     });
-    console.log('Image en base64 ici mais trop longue pour etre afficher');
 
     formData.append('imageUrl', uri);
     console.log('Image URL:', uri);
@@ -54,7 +53,7 @@ export default function Scan() {
     console.log('Date:', date);
 
     try {
-      const response = await fetch('http://10.101.15.105:5000/api/send-contract', {
+      const response = await fetch('http://192.168.56.1:5000/api/send-contract', {
         method: 'POST',
         body: formData,
       });
@@ -88,7 +87,7 @@ export default function Scan() {
 
       console.log('Token récupéré:', token);
 
-      const response = await fetch('http://10.101.15.105:5000/api/logout', {
+      const response = await fetch('http://192.168.1.106:5000/api/logout', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

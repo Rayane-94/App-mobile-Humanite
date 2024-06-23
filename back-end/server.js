@@ -22,7 +22,6 @@ app.use((req, res, next) => {
   next();
 });
 
-
 app.get('/api/test', (req, res) => {
   res.send('Hello World from Express & Mongoose!')
 });

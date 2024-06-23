@@ -1,3 +1,4 @@
+ip local BAT home: 10.101.15.105 
 Endpoint : 192.168.56.1:5000
 expo go :
 npx expo start

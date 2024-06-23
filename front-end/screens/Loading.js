@@ -1,8 +1,6 @@
 import React from 'react';
 import { Button, Text,View, Image , StyleSheet} from 'react-native';
 
-
-
 const Loading = ({navigation}) => {
     return(
         

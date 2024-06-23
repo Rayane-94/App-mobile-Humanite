@@ -1,14 +1,12 @@
 const mongoose = require('mongoose');
-//Definition du model a utulilser plusieur fois a chaque foi 
 const ContractSchema = new mongoose.Schema({
-    //title:{ type: String, required: true },
 
     //description:{ type: String, required: false },
     uri:{
          type: String,
          required: true 
     },
-    /*photo:{ 
+    /*photoB64:{ 
         type: String, 
         required: true
      },*/

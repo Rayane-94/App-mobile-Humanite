@@ -47,7 +47,7 @@ router.get('/admin/get-contract/:id', verifyAdmin, (req, res) => {
       res.status(400).json({ error });
     });
 });
-//Ajouter la verif de la validité du jwt avant add contrat
+
 router.post('/send-contract', upload.single('photo'), async (req, res) => {
   const { uri, date } = req.body;
 
@@ -56,10 +56,8 @@ router.post('/send-contract', upload.single('photo'), async (req, res) => {
       return res.status(400).json({ message: "Aucune image téléchargée" });
     }
 
-    // Téléchargez l'image sur Cloudinary
     const result = await cloudinary.uploader.upload(req.file.path);
 
-    // Créez un nouveau contrat avec l'URL de l'image et d'autres informations
     const contract = new Contract({
       uri: uri,
       imageUrl: result.secure_url, 
