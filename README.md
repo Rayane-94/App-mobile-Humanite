@@ -1,4 +1,7 @@
-ip local BAT home: 10.101.15.105 
+localisation par default
+{"coords": {"accuracy": 47.841400146484375, "altitude": 5, "altitudeAccuracy": 11.210350036621094, "heading": 0, "latitude": 37.4219983, "longitude": -122.084, "speed": 0}, "mocked": false, "timestamp": 1719823047146}
+
+ip local BAT home: 10.101.15.105
 Endpoint : 192.168.56.1:5000
 expo go :
 npx expo start
