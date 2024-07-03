@@ -6,6 +6,7 @@ const app = express();
 const contractController = require('./controllers/contractController');
 const userController = require('./controllers/userController');
 const adminController = require('./controllers/adminController')
+const camionController = require('./controllers/camionController')
 
 const mongoURI = process.env.MY_MONGO_URI
 
@@ -29,6 +30,7 @@ app.get('/api/test', (req, res) => {
 app.use('/api', contractController);
 app.use('/api', userController);
 app.use('/api', adminController);
+app.use('/api', camionController);
 
 const port = process.env.PORT || 5000;
 

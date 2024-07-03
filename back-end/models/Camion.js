@@ -3,18 +3,35 @@ const mongoose = require('mongoose');
 const CamionSchema = new mongoose.Schema({
   depart: {
     localisation: {
-      type: String,
+      type: {
+        latitude: {
+          type: Number,
+          required: true
+        },
+        longitude: {
+          type: Number,
+          required: true
+        }
+      },
       required: true
     },
     timestamp: {
       type: Date,
-      required: true,
-      //default: Date.now
+      required: false
     }
   },
   debut_chargement: {
     localisation: {
-      type: String,
+      type: {
+        latitude: {
+          type: Number,
+          required: false
+        },
+        longitude: {
+          type: Number,
+          required: false
+        }
+      },
       required: false
     },
     timestamp: {
@@ -24,7 +41,16 @@ const CamionSchema = new mongoose.Schema({
   },
   fin_chargement: {
     localisation: {
-      type: String,
+      type: {
+        latitude: {
+          type: Number,
+          required: false
+        },
+        longitude: {
+          type: Number,
+          required: false
+        }
+      },
       required: false
     },
     timestamp: {
@@ -32,10 +58,10 @@ const CamionSchema = new mongoose.Schema({
       required: false
     }
   },
-  contract_id: {
+  /*contract_id: {
     type: Number,
     required: false
-  }
+  }*/
 });
 
 module.exports = mongoose.model('Camion', CamionSchema);
